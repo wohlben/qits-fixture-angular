@@ -38,7 +38,7 @@ interface GreetingResponse {
     </form>
     @if (greeting(); as g) {
       <h1>Hello, {{ g.name }}!</h1>
-      <p>Greeted at {{ g.timestamp }}</p>
+      <p>Greeted at {{ g.timestamp }} — welcome!</p>
     } @else {
       <p>Greeting…</p>
     }
