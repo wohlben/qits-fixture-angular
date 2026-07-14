@@ -1,59 +1,37 @@
-# Webapp
+# qits-fixture-angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.6.
+A minimal but **servable** Angular SPA used as a qits test/demo fixture. It is the frontend
+half of the [`qits-fixture-quarkus-angular`](https://github.com/wohlben/qits-fixture-quarkus-angular)
+fixture, extracted into its own repository so it can be exercised **two ways**:
 
-## Development server
+- **Standalone Angular-only workspace** — framework detection resolves to Angular, the SPA serves
+  with no backend, the qits **capture button** self-hides via its `OPTIONS` availability probe
+  (there is no ingest to talk to), and `withQitsSnapshot` state capture and `@qits/angular`
+  consumption are all exercised without a Quarkus server.
+- **`src/main/webui` submodule** of `qits-fixture-quarkus-angular` — recomposed back into the
+  full-stack fixture via a *relative-url* submodule (`../qits-fixture-angular.git`), which resolves
+  to GitHub for humans and to the qits git host inside a workspace container.
 
-To start a local development server, run:
+## Branches
 
-```bash
-ng serve
-```
+| Branch | Relationship | Content |
+|---|---|---|
+| `main` | base | the full instrumented SPA |
+| `feature/greeting` | **fast-forward** over `main` | adds a welcome note under the greeting (`src/app/greeting.ts`) |
+| `feature/diverged` | **conflicts** with `main` | rewords the greeting off an earlier base — a real text conflict in `greeting.ts` |
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Dependencies
 
-## Code scaffolding
+The SPA consumes [`@qits/angular`](https://github.com/wohlben/qits-angular) — the qits instrumentation
+library — as a SHA-pinned git dependency (`git+https://github.com/wohlben/qits-angular.git#<sha>`).
+`pnpm install` fetches it from GitHub exactly as in the composed fixture.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Build & run
 
 ```bash
-ng build
+pnpm install
+pnpm build           # ng build → dist/
+pnpm start           # ng serve; API proxies to :8080 if a backend is up, else the capture button self-hides
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Requires JDK-free tooling: Node + pnpm only (see `packageManager` in `package.json`).
